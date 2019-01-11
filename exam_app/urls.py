@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     path('exams/', views.Exam_list.as_view()),
-    path('exams/<int:exam_id>/', views.Exam_instance.as_view()),
+    path('exams/<int:pk>/', views.Exam_instance.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
