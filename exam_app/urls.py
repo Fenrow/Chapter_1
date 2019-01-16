@@ -16,6 +16,14 @@ urlpatterns = [
     path('users/', views.UserList.as_view(), name='user-list'),
     #Detail of single user
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
+
+    path('exams/quest/', views.QuestList.as_view(), name='quest-list'),
+
+    path('exams/quest/<int:pk>/', views.QuestDetail.as_view(), name='quest-detail'),
+
+    path('exams/quest/answer/', views.AnswerList.as_view(), name='answer-list'),
+
+    path('exams/quest/answer/<int:pk>/', views.AnswerDetail.as_view(), name='answer-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

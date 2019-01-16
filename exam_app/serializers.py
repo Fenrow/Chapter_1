@@ -5,24 +5,29 @@ from .models import Exam, Quest, Answer
 
 class ExamSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    quests = serializers.HyperlinkedRelatedField(many=True, view_name='quest-detail', read_only=True)
 
     class Meta:
         model = Exam
-        fields = ('url', 'id', 'title', 'owner')
+        fields = '__all__' #('url', 'id', 'title', 'owner')
 
 class QuestSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    answers = serializers.HyperlinkedRelatedField(many=True, view_name='answer-detail', read_only=True)
+
     class Meta:
         model = Quest
-        fields = ('url', 'id', 'title', 'text')
+        fields = '__all__' #('url', 'id', 'title', 'text')
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Answer
-        fields = ('url', 'id', 'title', 'text')
+        fields = '__all__' #('url', 'id', 'title', 'text')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     exams = serializers.HyperlinkedRelatedField(many=True, view_name='exam-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'exams')
+        fields = ('url', 'id', 'username', 'exams', 'quests', 'answers')

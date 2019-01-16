@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 
 from .models import Exam, Quest, Answer
 from .serializers import ExamSerializer, QuestSerializer, AnswerSerializer, UserSerializer
@@ -38,9 +39,41 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class QuestList(generics.ListCreateAPIView):
+
+    queryset = Quest.objects.all()
+    serializer_class = QuestSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class QuestDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Quest.objects.all()
+    serializer_class = QuestSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
+class AnswerList(generics.ListCreateAPIView):
+
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'exams': reverse('exam-list', request=request, format=format)
+        'exams': reverse('exam-list', request=request, format=format),
+        'quest': reverse('quest-list', request=request, format=format),
+        'answer': reverse('answer-list', request=request, format=format),
     })
