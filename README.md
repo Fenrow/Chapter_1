@@ -14,5 +14,4 @@ In the app you have possibility to:
 -create questions to chosen exam
 -answering
 -check results
-
- 
+-filter by exam name, ovner etc.

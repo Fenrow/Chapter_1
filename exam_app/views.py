@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, renderers
+from rest_framework import generics, permissions, renderers, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -16,6 +16,8 @@ class Exam_list(generics.ListCreateAPIView):
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('owner', 'title')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -45,6 +47,8 @@ class QuestList(generics.ListCreateAPIView):
     queryset = Quest.objects.all()
     serializer_class = QuestSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('owner',)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -60,6 +64,8 @@ class AnswerList(generics.ListCreateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializerUser
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('owner', 'result')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
