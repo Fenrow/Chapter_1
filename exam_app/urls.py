@@ -11,19 +11,26 @@ urlpatterns = [
     #A single exam
     path('exams/<int:pk>/',
         views.Exam_detail.as_view(),
-        name='exam-detail'),
+        name='exam-detail'
+        ),
     #List of all users
     path('users/', views.UserList.as_view(), name='user-list'),
     #Detail of single user
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
-
+    #List of all Questions
     path('exams/quest/', views.QuestList.as_view(), name='quest-list'),
-
-    path('exams/quest/<int:pk>/', views.QuestDetail.as_view(), name='quest-detail'),
-
+    #Detail of single question
+    path('exams/quest/<int:pk>/',
+        views.QuestDetail.as_view(),
+        name='quest-detail'
+        ),
+    #List of all answers
     path('exams/quest/answer/', views.AnswerList.as_view(), name='answer-list'),
-
-    path('exams/quest/answer/<int:pk>/', views.AnswerDetail.as_view(), name='answer-detail'),
+    #Single answer
+    path('exams/quest/answer/<int:pk>/',
+        views.AnswerDetail.as_view(),
+        name='answer-detail'
+        ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

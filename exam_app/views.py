@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 from .models import Exam, Quest, Answer
-from .serializers import ExamSerializer, QuestSerializer, AnswerSerializer, UserSerializer
+from .serializers import ExamSerializer, QuestSerializer, AnswerSerializerUser, UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
 class Exam_list(generics.ListCreateAPIView):
@@ -57,7 +57,7 @@ class QuestDetail(generics.RetrieveUpdateDestroyAPIView):
 class AnswerList(generics.ListCreateAPIView):
 
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
+    serializer_class = AnswerSerializerUser
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
@@ -66,8 +66,15 @@ class AnswerList(generics.ListCreateAPIView):
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    serializer_class = AnswerSerializerUser
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def perform_update(self, serializer):
+        if serializer.get_owner() == serializer.get_quest_owner():
+            serializer.save(result=self.request.data['result'])
+        else:
+            return None
+
 
 @api_view(['GET'])
 def api_root(request, format=None):

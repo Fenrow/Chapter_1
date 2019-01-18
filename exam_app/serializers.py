@@ -5,28 +5,43 @@ from .models import Exam, Quest, Answer
 
 class ExamSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    quests = serializers.HyperlinkedRelatedField(many=True, view_name='quest-detail', read_only=True)
+    quests = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='quest-detail',
+        read_only=True
+        )
 
     class Meta:
         model = Exam
-        fields = '__all__' #('url', 'id', 'title', 'owner')
+        fields = ('url', 'owner', 'title', 'quests')
 
 class QuestSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    answers = serializers.HyperlinkedRelatedField(many=True, view_name='answer-detail', read_only=True)
+    answers = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='answer-detail',
+        read_only=True
+        )
 
     class Meta:
         model = Quest
-        fields = '__all__' #('url', 'id', 'title', 'text')
+        fields = ('url', 'owner', 'text', 'answers')
 
-class AnswerSerializer(serializers.HyperlinkedModelSerializer):
+class AnswerSerializerUser(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    quest_owner = serializers.ReadOnlyField(source='quest.owner.username')
+    result = serializers.IntegerField()
+
     class Meta:
         model = Answer
-        fields = '__all__' #('url', 'id', 'title', 'text')
+        fields = ('url', 'text', 'owner', 'quest_owner', 'result')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    exams = serializers.HyperlinkedRelatedField(many=True, view_name='exam-detail', read_only=True)
+    exams = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='exam-detail',
+        read_only=True
+        )
 
     class Meta:
         model = User
