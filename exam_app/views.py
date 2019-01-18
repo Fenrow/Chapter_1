@@ -25,7 +25,8 @@ class Exam_detail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                            IsOwnerOrReadOnly,)
 
 class UserList(generics.ListAPIView):
     """A List of all users"""
@@ -68,13 +69,6 @@ class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializerUser
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def perform_update(self, serializer):
-        if serializer.get_owner() == serializer.get_quest_owner():
-            serializer.save(result=self.request.data['result'])
-        else:
-            return None
-
 
 @api_view(['GET'])
 def api_root(request, format=None):
